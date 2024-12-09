@@ -1,23 +1,18 @@
 import mongoose from "mongoose";
-// import cors from 'cors';
-// import bcrypt from "bcryptjs";
 
-const empleadoSchema = mongoose.Schema({
-  name: {
-    type: String,
-    required: true,
+const empleadoSchema = new mongoose.Schema(
+  {
+    nombre: { type: String, required: true },
+    apellido: { type: String, required: true },
+    edad: { type: Number, required: true },
+    puesto: { type: String, required: true },
+    departamentoId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Departamento",
+    },
   },
-  lastName: {
-    type: String,
-    required: true,
-  },
-  email: {
-    type: String,
-    required: true,
-  },
-  password: {
-    type: String,
-    required: true,
-  },
-});
-export default empleadoSchema;
+  { timestamps: true }
+);
+
+const Empleado = mongoose.model("Empleado", empleadoSchema);
+export default Empleado;

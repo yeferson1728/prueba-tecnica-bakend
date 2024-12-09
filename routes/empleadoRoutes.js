@@ -1,41 +1,31 @@
 import express from "express";
-import listaEmpleados from "../models/empleado.js";
+import { body } from "express-validator";
+import * as empleadoController from "../controllers/empleadoController.js";
+import { validarEmpleado } from "../middlewares/validarEmpleado.js";
 
-const listaEmpleados = "";
-// Obtener todos los empleados
-app.get("/empleados", async (req, res) => {
-  const empleados = await empleados.find();
-  res.json(empleados);
-});
-// Obtener un empleado por ID
-app.get("/empleado/:id", async (req, res) => {
-  const employee = await empleados.findById(req.params.id);
-  res.json(employee);
-});
-// Crear un nuevo empleado
-app.post("/empleado", async (req, res) => {
-  const newempleados = new empleados(req.body);
-  const savedempleados = await newempleados.save();
-  res.json(savedempleados);
-});
+const router = express.Router();
 
-// Actualizar un empleado
-app.put("/empleado/:id", async (req, res) => {
-  const updatedempleados = await empleados.findByIdAndUpdate(
-    req.params.id,
-    req.body,
-    { new: true }
-  );
-  res.json(updatedempleados);
-});
+// Validaciones para crear un empleado
+router.post(
+  "/",
+  [
+    body("nombre").notEmpty().withMessage("El nombre es obligatorio"),
+    body("apellido").notEmpty().withMessage("El apellido es obligatorio"),
+    body("edad")
+      .isInt({ min: 18 })
+      .withMessage("La edad debe ser mayor o igual a 18"),
+    body("puesto").notEmpty().withMessage("El puesto es obligatorio"),
+    body("departamentoId")
+      .isMongoId()
+      .withMessage("El ID del departamento es inválido"),
+  ],
+  validarEmpleado,
+  empleadoController.crearEmpleado
+);
 
-// Eliminar un empleado
-app.delete("/empleado/:id", async (req, res) => {
-  await empleados.findByIdAndDelete(req.params.id);
-  res.json({ message: "empleados deleted" });
-});
+router.get("/", empleadoController.obtenerEmpleados);
+router.get("/:id", empleadoController.obtenerEmpleado);
+router.put("/:id", empleadoController.actualizarEmpleado);
+router.delete("/:id", empleadoController.eliminarEmpleado);
 
-const port = process.env.PORT || 5000;
-app.listen(port, () => {
-  console.log(`Server listening on port ${port}`);
-});
+export default router;
