@@ -7,7 +7,7 @@ const router = express.Router();
 
 // Validaciones para crear un departamento
 router.post(
-  "/",
+  "/departamento",
   [
     body("nombre")
       .notEmpty()

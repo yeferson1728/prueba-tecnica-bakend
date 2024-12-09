@@ -3,9 +3,9 @@ import * as empleadoService from "../services/empleadoService.js";
 
 export const crearEmpleado = async (req, res) => {
   try {
-    const salt = await bcrypt.genSalt(10);
-    const hashedPassword = await bcrypt.hash(req.body.password, salt);
-    req.body.password = hashedPassword;
+    // const salt = await bcrypt.genSalt(10);
+    // const hashedPassword = await bcrypt.hash(req.body.password, salt);
+    // req.body.password = hashedPassword;
 
     const empleado = await empleadoService.crearEmpleado(req.body);
     res.status(201).json(empleado);
